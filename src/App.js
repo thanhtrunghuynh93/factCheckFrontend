@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import CircularProgress from '@mui/material/CircularProgress';
+import { CircularProgress, Box } from '@mui/material';
 import LinearWithValueLabel from './LinearWithValueLabel';
+import { TextareaAutosize } from '@mui/base';
+
+const FAKE = 0;
+const CORRECT = 1;
 
 const mock_data = {
 	content:
@@ -14,14 +18,20 @@ function App() {
 	const [keyword, setKeyword] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
+	const [result, setResult] = useState(null);
 	const [progress, setProgress] = useState(0);
 	const handleOnSearch = (e) => {
 		e.preventDefault();
-        setData([])
-        setProgress(0)
+		setData([]);
+		setProgress(0);
+		setResult(null);
 		setLoading(true);
 		setTimeout(() => {
 			setLoading(false);
+			setResult({
+				claim: 'Ukrainian President Volodymr Zelenskyy said that "we are ready to exchange Belgorod for Ukraines membership in NATO."',
+				rating: Math.round(Math.random()),
+			});
 			setData([mock_data, mock_data, mock_data, mock_data, mock_data]);
 		}, 10000);
 	};
@@ -55,14 +65,11 @@ function App() {
 						/>
 					</svg>
 					<form onSubmit={handleOnSearch}>
-						<input
-							type='text'
-							id='fact'
-							name='fact'
+						<TextareaAutosize
 							placeholder='Type to search'
 							value={keyword}
 							onChange={(e) => setKeyword(e.target.value)}
-						></input>
+						/>
 					</form>
 				</div>
 				<button className='btn' onClick={handleOnSearch}>
@@ -73,8 +80,58 @@ function App() {
 					)}
 				</button>
 			</div>
-			{loading && <LinearWithValueLabel value={progress} />}
-			<div className='result'>
+			{loading && (
+				<LinearWithValueLabel value={progress} className='mt-1' />
+			)}
+			<div className='result mt-1'>
+				{result && (
+					<>
+						<Box
+							sx={{
+								padding: '0px  10px 10px 10px',
+								border: '3px solid #f2f2f2',
+								borderRadius: '5px',
+							}}
+						>
+							<p className='title'>Claim:</p>
+							<Box
+								sx={{
+									borderLeft: '4px solid #F29049',
+									paddingLeft: '15px',
+									fontSize: '20px',
+								}}
+							>
+								{result.claim}
+							</Box>
+						</Box>
+						<Box
+							sx={{
+								padding: '0px  10px 10px 10px',
+								border: '3px solid #f2f2f2',
+								borderRadius: '5px',
+								marginTop: '1rem',
+							}}
+						>
+							<p className='title'>Rating:</p>
+							<div className='d-flex align-center'>
+								<img
+									src={
+										result.rating === FAKE
+											? './fake_icon.png'
+											: '/correct_icon.png'
+									}
+									className='rating-icon'
+									alt='rating-icon'
+								/>
+								<p className='rating-content'>
+									{result.rating === FAKE
+										? 'Fake'
+										: 'Correct'}
+								</p>
+							</div>
+						</Box>
+					</>
+				)}
 				<ul>
 					{data.length > 0 &&
 						data.map((item, index) => (
