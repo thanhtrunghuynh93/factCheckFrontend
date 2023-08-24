@@ -136,9 +136,11 @@ function App() {
 					{data.length > 0 &&
 						data.map((item, index) => (
 							<li key={index}>
-								<p>{item.content}</p>
 								<p>
-									<b>Explain</b>
+									<b>Evidence: </b> {item.content}
+								</p>
+								<p>
+									<b>Explain: </b>
 									{item.explain}
 								</p>
 								<p>
