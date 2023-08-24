@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import CircularProgress from '@mui/material/CircularProgress';
+import LinearWithValueLabel from './LinearWithValueLabel';
 
 const mock_data = {
 	content:
@@ -13,14 +14,29 @@ function App() {
 	const [keyword, setKeyword] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [data, setData] = useState([]);
+	const [progress, setProgress] = useState(0);
 	const handleOnSearch = (e) => {
 		e.preventDefault();
+        setData([])
+        setProgress(0)
 		setLoading(true);
 		setTimeout(() => {
 			setLoading(false);
 			setData([mock_data, mock_data, mock_data, mock_data, mock_data]);
-		}, 3000);
+		}, 10000);
 	};
+	useEffect(() => {
+		if (loading) {
+			const timer = setInterval(() => {
+				setProgress((prevProgress) =>
+					prevProgress >= 100 ? prevProgress : prevProgress + 10,
+				);
+			}, 1000);
+			return () => {
+				clearInterval(timer);
+			};
+		}
+	}, [loading]);
 
 	return (
 		<div className='container'>
@@ -57,6 +73,7 @@ function App() {
 					)}
 				</button>
 			</div>
+			{loading && <LinearWithValueLabel value={progress} />}
 			<div className='result'>
 				<ul>
 					{data.length > 0 &&
