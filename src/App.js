@@ -4,48 +4,41 @@ import { CircularProgress, Box } from '@mui/material';
 import LinearWithValueLabel from './LinearWithValueLabel';
 import { TextareaAutosize } from '@mui/base';
 
-const FAKE = 0;
-const CORRECT = 1;
+import { factCheckGPT } from './api';
 
-const mock_data = {
-	content:
-		'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto, voluptatum! Ea aut mollitia provident, dignissimos nostrum voluptates. Doloremque, voluptatum velit?',
-	explain:
-		'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quidem quos neque, aliquam laborum doloribus harum quis quia necessitatibus ullam facere earum veritatis itaque reprehenderit commodi repellendus eos eaque tempora nostrum veniam quibusdam esse illo. Voluptatibus tempore impedit suscipit eum facere?',
-	source: 'https://vi.wikipedia.org/wiki/Nh%E1%BB%87n',
-};
+const FAKE = 'Fake';
+
 function App() {
 	const [keyword, setKeyword] = useState('');
 	const [loading, setLoading] = useState(false);
-	const [data, setData] = useState([]);
-	const [result, setResult] = useState(null);
+	const [data, setData] = useState(null);
 	const [progress, setProgress] = useState(0);
-	const handleOnSearch = (e) => {
+	const handleOnSearch = async (e) => {
 		e.preventDefault();
-		setData([]);
+		setData(null);
 		setProgress(0);
-		setResult(null);
 		setLoading(true);
-		setTimeout(() => {
-			setLoading(false);
-			setResult({
-				claim: 'Ukrainian President Volodymr Zelenskyy said that "we are ready to exchange Belgorod for Ukraines membership in NATO."',
-				rating: Math.round(Math.random()),
-			});
-			setData([mock_data, mock_data, mock_data, mock_data, mock_data]);
-		}, 10000);
+        const result = await factCheckGPT({claim: keyword})
+        if(result.success) {
+            setLoading(false);
+            setData(result.data);
+		}
 	};
 	useEffect(() => {
+        var timer
 		if (loading) {
-			const timer = setInterval(() => {
+			timer = setInterval(() => {
 				setProgress((prevProgress) =>
-					prevProgress >= 100 ? prevProgress : prevProgress + 10,
+					prevProgress >= 90 ? prevProgress : prevProgress + 5,
 				);
 			}, 1000);
 			return () => {
 				clearInterval(timer);
 			};
-		}
+		} else {
+            clearInterval(timer);
+            setProgress(100)
+        }
 	}, [loading]);
 
 	return (
@@ -84,9 +77,9 @@ function App() {
 				<LinearWithValueLabel value={progress} className='mt-1' />
 			)}
 			<div className='result mt-1'>
-				{result && (
+				{data && (
 					<>
-						<Box
+						{/* <Box
 							sx={{
 								padding: '0px  10px 10px 10px',
 								border: '3px solid #f2f2f2',
@@ -103,7 +96,7 @@ function App() {
 							>
 								{result.claim}
 							</Box>
-						</Box>
+						</Box> */}
 						<Box
 							sx={{
 								padding: '0px  10px 10px 10px',
@@ -116,7 +109,7 @@ function App() {
 							<div className='d-flex align-center'>
 								<img
 									src={
-										result.rating === FAKE
+										data.result === FAKE
 											? './fake_icon.png'
 											: '/correct_icon.png'
 									}
@@ -124,24 +117,23 @@ function App() {
 									alt='rating-icon'
 								/>
 								<p className='rating-content'>
-									{result.rating === FAKE
-										? 'Fake'
-										: 'Correct'}
+									{data.result === FAKE ? 'Fake' : 'Correct'}
 								</p>
 							</div>
 						</Box>
 					</>
 				)}
 				<ul>
-					{data.length > 0 &&
-						data.map((item, index) => (
+					{data &&
+						data.evidences.length > 0 &&
+						data.evidences.map((item, index) => (
 							<li key={index}>
 								<p>
-									<b>Evidence: </b> {item.content}
+									<b>Claim: </b> {item.claim}
 								</p>
 								<p>
 									<b>Explain: </b>
-									{item.explain}
+									{item.explanation}
 								</p>
 								<p>
 									<b>Source:</b>
