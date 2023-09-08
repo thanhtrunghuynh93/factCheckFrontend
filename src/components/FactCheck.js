@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
-import { CircularProgress, Box, Tab, Tabs } from '@mui/material';
+import {
+	CircularProgress,
+	Box,
+	Tab,
+	Tabs,
+	Card,
+	CardActionArea,
+	CardContent,
+} from '@mui/material';
 import LinearProgressWithLabel from './LinearWithValueLabel';
 import { TextareaAutosize } from '@mui/base';
 import { styled } from '@mui/material/styles';
@@ -11,7 +19,7 @@ const FAKE = 'Fake';
 const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 	({ theme }) => ({
 		'&.Mui-selected': {
-			color: '#F29049',
+			color: 'red',
 		},
 	}),
 );
@@ -26,11 +34,18 @@ const FactCheck = () => {
 		setData(null);
 		setProgress(0);
 		setLoading(true);
-		const result = await factCheckGPT({ claim: keyword });
-		if (result.success) {
-			setLoading(false);
-			setData(result.data);
-		}
+        if(tab === 'gpt') {
+            const result = await factCheckGPT({ claim: keyword });
+			if (result.success) {
+				setLoading(false);
+				setData(result.data);
+			}
+        }else if(tab === 'nli') {
+            // call api nli
+        } else {
+            // call api local
+        }
+		
 	};
 	useEffect(() => {
 		var timer;
@@ -58,7 +73,7 @@ const FactCheck = () => {
 		<div className='container'>
 			<div className='logo'>
 				{/* <img src='./logo.drawio.svg' alt='logo' /> */}
-				<img src='./factcheck-logo.png' alt='logo' width='50%'/>
+				<img src='./factcheck-logo.png' alt='logo' width='50%' />
 			</div>
 			<div>
 				<div>
@@ -69,7 +84,7 @@ const FactCheck = () => {
 						centered
 						TabIndicatorProps={{
 							style: {
-								backgroundColor: '#F29049',
+								backgroundColor: 'red',
 							},
 						}}
 					>
@@ -104,7 +119,7 @@ const FactCheck = () => {
 						{loading ? (
 							<CircularProgress color='inherit' size={16} />
 						) : (
-							'Search'
+							'Verify'
 						)}
 					</button>
 				</div>
@@ -152,7 +167,7 @@ const FactCheck = () => {
 												: '/true_icon.png'
 										}
 										className='rating-icon'
-										alt='rating-icon'										
+										alt='rating-icon'
 									/>
 									<p className='rating-content'>
 										{data.result === FAKE
@@ -168,23 +183,29 @@ const FactCheck = () => {
 							data.evidences.length > 0 &&
 							data.evidences.map((item, index) => (
 								<li key={index}>
-									<p>
-										<b>Claim: </b> {item.claim}
-									</p>
-									<p>
-										<b>Explain: </b>
-										{item.explanation}
-									</p>
-									<p>
-										<b>Source:</b>
-										<a
-											href={item.source}
-											target='_blank'
-											rel='noreferrer'
-										>
-											{item.source}
-										</a>
-									</p>
+									<Card>
+										<CardActionArea>
+											<CardContent sx={{fontFamily: 'monospace'}}>
+												<p>
+													<b>Claim: </b> {item.claim}
+												</p>
+												<p>
+													<b>Explain: </b>
+													{item.explanation}
+												</p>
+												<p>
+													<b>Source:</b>
+													<a
+														href={item.source}
+														target='_blank'
+														rel='noreferrer'
+													>
+														{item.source}
+													</a>
+												</p>
+											</CardContent>
+										</CardActionArea>
+									</Card>
 								</li>
 							))}
 					</ul>

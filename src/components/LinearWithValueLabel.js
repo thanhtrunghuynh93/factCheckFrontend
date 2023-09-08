@@ -16,7 +16,7 @@ const CustomLinearProgress = styled(LinearProgress)(({ theme }) => ({
 	},
 	[`& .${linearProgressClasses.bar}`]: {
 		borderRadius: 5,
-		backgroundColor: '#F29049',
+		backgroundColor: 'red',
 	},
 }));
 
