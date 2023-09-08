@@ -57,7 +57,8 @@ const FactCheck = () => {
 	return (
 		<div className='container'>
 			<div className='logo'>
-				<img src='./logo.drawio.svg' alt='logo' />
+				{/* <img src='./logo.drawio.svg' alt='logo' /> */}
+				<img src='./factcheck-logo.png' alt='logo' width='50%'/>
 			</div>
 			<div>
 				<div>
@@ -147,11 +148,11 @@ const FactCheck = () => {
 									<img
 										src={
 											data.result === FAKE
-												? './fake_icon.png'
-												: '/correct_icon.png'
+												? './false_icon.png'
+												: '/true_icon.png'
 										}
 										className='rating-icon'
-										alt='rating-icon'
+										alt='rating-icon'										
 									/>
 									<p className='rating-content'>
 										{data.result === FAKE

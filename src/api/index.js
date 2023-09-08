@@ -22,3 +22,19 @@ export async function factCheckGPT({ claim }) {
         }
     }
 }
+
+export async function factCheckNLI({ claim }) {
+    try {
+        const res = await axiosInstance.post('nli', {
+            claim
+        })
+        return {
+            success: true,
+            data: JSON.parse(res.data.data)
+        }
+    } catch (error) {
+        return {
+            success: false
+        }
+    }
+}
