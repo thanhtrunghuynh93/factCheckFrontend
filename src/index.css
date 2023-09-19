@@ -41,6 +41,7 @@ code {
 }
 .container .logo {
     margin-top: 20%;
+    
 }
 .container .logo img {
     display: block;
@@ -101,6 +102,7 @@ code {
 .result li {
     /* border-bottom: 1px solid var(--supportive-light-brown-e-1-d-6-ce, #E1D6CE); */
     margin-bottom: 20px;
+    margin-left: -37px;
 }
 .result li b {
     margin-right: 5px;

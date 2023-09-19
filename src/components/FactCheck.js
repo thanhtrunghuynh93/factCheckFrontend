@@ -3,7 +3,7 @@ import {
 	CircularProgress,
 	Box,
 	Tab,
-	Tabs,
+	// Tabs,
 	Card,
 	CardActionArea,
 	CardContent,
@@ -12,7 +12,7 @@ import LinearProgressWithLabel from './LinearWithValueLabel';
 import { TextareaAutosize } from '@mui/base';
 import { styled } from '@mui/material/styles';
 
-import { factCheckGPT } from '../api';
+import { factCheckGPT, factCheckNLI } from '../api';
 
 const FAKE = 'Fake';
 
@@ -34,17 +34,27 @@ const FactCheck = () => {
 		setData(null);
 		setProgress(0);
 		setLoading(true);
-        if(tab === 'gpt') {
-            const result = await factCheckGPT({ claim: keyword });
-			if (result.success) {
-				setLoading(false);
-				setData(result.data);
-			}
-        }else if(tab === 'nli') {
-            // call api nli
-        } else {
-            // call api local
-        }
+		const result = await factCheckGPT({ claim: keyword });
+		if (result.success) {
+			setLoading(false);
+			setData(result.data);
+		}
+        // if(tab === 'gpt') {
+        //     const result = await factCheckGPT({ claim: keyword });
+		// 	if (result.success) {
+		// 		setLoading(false);
+		// 		setData(result.data);
+		// 	}
+        // }else if(tab === 'nli') {
+        //     // call api nli
+		// 	const result = await factCheckNLI({ claim: keyword });
+		// 	if (result.success) {
+		// 		setLoading(false);
+		// 		setData(result.data);
+		// 	}
+        // } else {
+        //     // call api local
+        // }
 		
 	};
 	useEffect(() => {
@@ -64,19 +74,19 @@ const FactCheck = () => {
 		}
 	}, [loading]);
 
-	const [tab, setTab] = useState('gpt');
+	// const [tab, setTab] = useState('gpt');
 
-	const handleChange = (event, newValue) => {
-		setTab(newValue);
-	};
+	// const handleChange = (event, newValue) => {
+	// 	setTab(newValue);
+	// };
 	return (
 		<div className='container'>
 			<div className='logo'>
 				{/* <img src='./logo.drawio.svg' alt='logo' /> */}
-				<img src='./factcheck-logo.png' alt='logo' width='50%' />
+				<img src='./logo.png' alt='logo' width='70%' />
 			</div>
 			<div>
-				<div>
+				{/* <div>
 					<Tabs
 						aria-label='disabled tabs example'
 						value={tab}
@@ -92,7 +102,7 @@ const FactCheck = () => {
 						<StyledTab value='nli' label='NLI' />
 						<StyledTab value='local' label='Local' />
 					</Tabs>
-				</div>
+				</div> */}
 				<div id='search-bar' className='mt-1'>
 					<div className='search-area'>
 						<svg

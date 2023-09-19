@@ -7,9 +7,9 @@ function App() {
 		<>
 			<Header />
 			<FactCheck />
-			<footer>
+			{/* <footer>
 				<p class='copyright'>LSIR@2023</p>
-			</footer>
+			</footer> */}
 		</>
 	);
 }
