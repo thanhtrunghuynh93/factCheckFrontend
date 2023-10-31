@@ -7,6 +7,23 @@ export const axiosInstance = axios.create({
 	},
 });
 
+export async function medfact({ data }) {
+    try {
+        const res = await axiosInstance.post('medfact', {
+            data
+        })
+        return {
+            success: true,
+            data: JSON.parse(res.data.data)
+        }
+    } catch (error) {
+        return {
+            success: false
+        }
+    }
+}
+
+
 export async function factCheckGPT({ claim }) {
     try {
         const res = await axiosInstance.post('gpt', {
@@ -22,6 +39,8 @@ export async function factCheckGPT({ claim }) {
         }
     }
 }
+
+
 
 export async function factCheckNLI({ claim }) {
     try {

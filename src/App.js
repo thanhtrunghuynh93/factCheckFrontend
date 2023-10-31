@@ -1,16 +1,17 @@
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import FactCheck from './components/FactCheck';
-import Header from './components/Header';
+// import FactCheck from './components/FactCheck';
+// import Header from './components/Header';
+import Home from './components/Home'
+import MedFact from './components/MedFact'
 
 function App() {
 	return (
-		<>
-			<Header />
-			<FactCheck />
-			{/* <footer>
-				<p class='copyright'>LSIR@2023</p>
-			</footer> */}
-		</>
+		<Routes data-theme="light">
+			<Route path="/" element={<Home />}/>
+			<Route path="/medfact" element={<MedFact />}/>
+		</Routes>
+			
 	);
 }
 
