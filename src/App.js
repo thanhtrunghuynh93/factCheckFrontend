@@ -4,14 +4,17 @@ import './App.css';
 // import Header from './components/Header';
 import Home from './components/Home'
 import MedFact from './components/MedFact'
+import Header from './components/Header';
 
 function App() {
 	return (
-		<Routes data-theme="light">
-			<Route path="/" element={<Home />}/>
-			<Route path="/medfact" element={<MedFact />}/>
-		</Routes>
-			
+		<>
+			<Header />
+			<Routes data-theme='light'>
+				<Route path='/' element={<Home />} />
+				<Route path='/medfact' element={<MedFact />} />
+			</Routes>
+		</>
 	);
 }
 

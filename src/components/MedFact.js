@@ -27,30 +27,21 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 const MedFact = () => {
 	const [keyword, setKeyword] = useState('');
 	const [loading, setLoading] = useState(false);
+    const [subLoading, setSubLoading] = useState(false)
 	const [data, setData] = useState(null);
 	const [progress, setProgress] = useState(0);
+    const [params, setParams] = useState(null);
 	const handleOnSearch = async (e) => {
 		e.preventDefault();
 		setData(null);
 		setProgress(0);
 		setLoading(true);
-		var result = await medfact({ claim: keyword, state: "", current_step: 0 });
-		if (result.success) {
-			
-			setData(result.data);
-
-			//TODO:Check the result, if not finish then continue to send here
-			// while (result.data.done == 0){
-			// 	result = await medfact({ claim: keyword, state: result.data.state, current_step: result.data.current_step });
-			// 	// alert(result.data.state)
-			// 	setData(result.data);
-		
-			// }
-			setLoading(false);
-			
-
-		}
-     };
+        setParams({
+			claim: keyword,
+			state: '',
+			current_step: 0,
+		});
+	};
 	useEffect(() => {
 		var timer;
 		if (loading) {
@@ -68,6 +59,35 @@ const MedFact = () => {
 		}
 	}, [loading]);
 
+    useEffect(() => {
+        const fetch = async (params) => {
+            setSubLoading(true)
+            var result = await medfact({
+				claim: params.claim,
+				state: params.state,
+				current_step: params.current_step,
+			});
+            if (result.success) {
+				console.log(result.data);
+				setData(result.data);
+                if(result.data.done){
+                    setSubLoading(false)
+                    setLoading(false)
+                }
+                else {
+                    var newParams = {
+						claim: keyword,
+						state: result.data.state,
+						current_step: result.data.current_step,
+					};
+                    setParams(newParams)
+                }
+			}
+        }
+        if(params)
+            fetch(params)
+    }, [params]);
+
 	return (
 		<div className='container'>
 			<div className='logo'>
@@ -75,7 +95,7 @@ const MedFact = () => {
 				<img src='./logo.png' alt='logo' width='70%' />
 			</div>
 			<div>
-					<div id='search-bar' className='mt-1'>
+				<div id='search-bar' className='mt-1'>
 					<div className='search-area'>
 						<svg
 							width='32'
@@ -167,32 +187,41 @@ const MedFact = () => {
 								<li key={index}>
 									<Card>
 										<CardActionArea>
-											<CardContent sx={{fontFamily: 'monospace'}}>
+											<CardContent
+												sx={{ fontFamily: 'monospace' }}
+											>
 												<p>
-													<b>{item.thought}</b> 
+													<b>{item.thought}</b>
 												</p>
 												<p>
 													<b>{item.action}</b>
-													
-												</p>	
-																							
-												{item.evidences.map((e, index) => (
-													<div>
-														<p>
-													<b>Evidence: </b> {e.content}
-													</p>
-													<p>
-													<b>Source:</b>
-													<a
-														href={e.source}
-														target='_blank'
-														rel='noreferrer'
-													>
-														{e.source}
-													</a>
-													</p>
-													</div>
-												))}												
+												</p>
+
+												{item.evidences.map(
+													(e, index) => (
+														<div>
+															<p>
+																<b>
+																	Evidence:{' '}
+																</b>{' '}
+																{e.content}
+															</p>
+															<p>
+																<b>Source:</b>
+																<a
+																	href={
+																		e.source
+																	}
+																	target='_blank'
+																	rel='noreferrer'
+																>
+																	{e.source}
+																</a>
+															</p>
+                                                            {index < item.evidences.length - 1 && <hr />}
+														</div>
+													),
+												)}
 											</CardContent>
 										</CardActionArea>
 									</Card>

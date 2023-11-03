@@ -7,7 +7,7 @@ export const axiosInstance = axios.create({
 	},
 });
 
-export async function medfact({ data }) {
+export async function medfact(data) {
     try {
         const res = await axiosInstance.post('medfact', {
             data
