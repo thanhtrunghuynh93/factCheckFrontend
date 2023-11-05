@@ -8,10 +8,10 @@ export const axiosInstance = axios.create({
 });
 
 export async function medfact(data) {
+    console.log("Preparing passing the data")
+    console.log(data)
     try {
-        const res = await axiosInstance.post('medfact', {
-            data
-        })
+        const res = await axiosInstance.post('medfact', data)
         return {
             success: true,
             data: JSON.parse(res.data.data)

@@ -12,7 +12,7 @@ import LinearProgressWithLabel from './LinearWithValueLabel';
 import { TextareaAutosize } from '@mui/base';
 import { styled } from '@mui/material/styles';
 
-import { factCheckGPT, medfact } from '../api';
+import { medfact } from '../api';
 
 const FAKE = 'Fake';
 
@@ -38,7 +38,7 @@ const MedFact = () => {
 		setLoading(true);
         setParams({
 			claim: keyword,
-			state: '',
+			current_state: '',
 			current_step: 0,
 		});
 	};
@@ -62,13 +62,14 @@ const MedFact = () => {
     useEffect(() => {
         const fetch = async (params) => {
             setSubLoading(true)
+			// console.log(params)
             var result = await medfact({
-				claim: params.claim,
-				state: params.state,
-				current_step: params.current_step,
+				"claim": keyword,
+				"state": params.current_state,
+				"current_step": params.current_step,
 			});
             if (result.success) {
-				console.log(result.data);
+				console.log(result.data.current_state);
 				setData(result.data);
                 if(result.data.done){
                     setSubLoading(false)
@@ -76,10 +77,11 @@ const MedFact = () => {
                 }
                 else {
                     var newParams = {
-						claim: keyword,
-						state: result.data.state,
+						claim: params.claim,
+						current_state: result.data.current_state,
 						current_step: result.data.current_step,
 					};
+					// console.log(newParams)
                     setParams(newParams)
                 }
 			}
