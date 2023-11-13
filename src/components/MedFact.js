@@ -14,7 +14,8 @@ import { styled } from '@mui/material/styles';
 
 import { medfact } from '../api';
 
-const FAKE = 'Fake';
+const SUPPORTS = 'Finish[SUPPORTS]';
+const REFUTES = 'Finish[REFUTES]';
 
 const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 	({ theme }) => ({
@@ -27,16 +28,17 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 const MedFact = () => {
 	const [keyword, setKeyword] = useState('');
 	const [loading, setLoading] = useState(false);
-    const [subLoading, setSubLoading] = useState(false)
+	const [subLoading, setSubLoading] = useState(false);
 	const [data, setData] = useState(null);
 	const [progress, setProgress] = useState(0);
-    const [params, setParams] = useState(null);
+	const [checkResult, setResult] = useState(null);
+	const [params, setParams] = useState(null);
 	const handleOnSearch = async (e) => {
 		e.preventDefault();
 		setData(null);
 		setProgress(0);
 		setLoading(true);
-        setParams({
+		setParams({
 			claim: keyword,
 			current_state: '',
 			current_step: 0,
@@ -59,36 +61,39 @@ const MedFact = () => {
 		}
 	}, [loading]);
 
-    useEffect(() => {
-        const fetch = async (params) => {
-            setSubLoading(true)
-			// console.log(params)
-            var result = await medfact({
-				"claim": keyword,
-				"state": params.current_state,
-				"current_step": params.current_step,
+	useEffect(() => {
+		const fetch = async (params) => {
+			setSubLoading(true);
+			var result = await medfact({
+				claim: keyword,
+				state: params.current_state,
+				current_step: params.current_step,
 			});
-            if (result.success) {
+			if (result.success) {
 				console.log(result.data.current_state);
 				setData(result.data);
-                if(result.data.done){
-                    setSubLoading(false)
-                    setLoading(false)
-                }
-                else {
-                    var newParams = {
+				if (result.data.done) {
+					setSubLoading(false);
+					setLoading(false);
+					setResult(result.data.result);
+				} else {
+					var newParams = {
 						claim: params.claim,
 						current_state: result.data.current_state,
 						current_step: result.data.current_step,
 					};
-					// console.log(newParams)
-                    setParams(newParams)
-                }
+					setParams(newParams);
+				}
+			} else {
+				alert('Something was wrong!')
+				setData(null);
+				setProgress(0);
+				setLoading(false);
+				setParams(null);
 			}
-        }
-        if(params)
-            fetch(params)
-    }, [params]);
+		};
+		if (params) fetch(params);
+	}, [params]);
 
 	return (
 		<div className='container'>
@@ -134,27 +139,9 @@ const MedFact = () => {
 					/>
 				)}
 				<div className='result mt-1'>
-					{data && (
+					{checkResult && (
 						<>
-							{/* <Box
-							sx={{
-								padding: '0px  10px 10px 10px',
-								border: '3px solid #f2f2f2',
-								borderRadius: '5px',
-							}}
-						>
-							<p className='title'>Claim:</p>
 							<Box
-								sx={{
-									borderLeft: '4px solid #F29049',
-									paddingLeft: '15px',
-									fontSize: '20px',
-								}}
-							>
-								{result.claim}
-							</Box>
-						</Box> */}
-							{/* <Box
 								sx={{
 									padding: '0px  10px 10px 10px',
 									border: '3px solid #f2f2f2',
@@ -162,24 +149,27 @@ const MedFact = () => {
 									marginTop: '1rem',
 								}}
 							>
-								<p className='title'>Rating:</p>
+								<p className='title'>Rating: </p>
 								<div className='d-flex align-center'>
 									<img
 										src={
-											data.result === FAKE
-												? './false_icon.png'
-												: '/true_icon.png'
+											checkResult === REFUTES
+												? '/fake_icon.png' : checkResult === SUPPORTS
+													? './true_icon.png'
+													: './not_enough_info_icon.jpg'
 										}
 										className='rating-icon'
 										alt='rating-icon'
 									/>
 									<p className='rating-content'>
-										{data.result === FAKE
-											? 'Fake'
-											: 'Correct'}
+										{checkResult === REFUTES ? 'Fake' :
+											checkResult === SUPPORTS
+												? 'True'
+												: 'Not enough info'
+											}
 									</p>
 								</div>
-							</Box> */}
+							</Box>
 						</>
 					)}
 					<ul>
@@ -220,7 +210,10 @@ const MedFact = () => {
 																	{e.source}
 																</a>
 															</p>
-                                                            {index < item.evidences.length - 1 && <hr />}
+															{index <
+																item.evidences
+																	.length -
+																	1 && <hr />}
 														</div>
 													),
 												)}
