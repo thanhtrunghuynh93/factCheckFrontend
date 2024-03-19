@@ -23,10 +23,9 @@ export async function medfact(data) {
     }
 }
 
-
 export async function factCheckGPT({ claim }) {
     try {
-        const res = await axiosInstance.post('gpt', {
+        const res = await axiosInstance.post('gpt4', {
             claim
         })
         return {
@@ -39,6 +38,23 @@ export async function factCheckGPT({ claim }) {
         }
     }
 }
+
+
+// export async function factCheckGPT({ claim }) {
+//     try {
+//         const res = await axiosInstance.post('gpt', {
+//             claim
+//         })
+//         return {
+//             success: true,
+//             data: JSON.parse(res.data.data)
+//         }
+//     } catch (error) {
+//         return {
+//             success: false
+//         }
+//     }
+// }
 
 
 

@@ -14,7 +14,7 @@ import { styled } from '@mui/material/styles';
 
 import { factCheckGPT, factCheckNLI } from '../api';
 
-const FAKE = 'Fake';
+const FAKE = 'false';
 
 const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
 	({ theme }) => ({
@@ -197,8 +197,11 @@ const FactCheck = () => {
 										<CardActionArea>
 											<CardContent sx={{fontFamily: 'monospace'}}>
 												<p>
-													<b>Claim: </b> {item.claim}
+													<b>Claim: </b> {item.quote}
 												</p>
+												<p>
+													<b>Support: </b> {item.support}
+												</p>												
 												<p>
 													<b>Explain: </b>
 													{item.explanation}
