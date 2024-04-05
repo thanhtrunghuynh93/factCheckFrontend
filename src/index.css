@@ -23,6 +23,9 @@ code {
 .mt-1 {
     margin-top: 1rem;
 }
+.text-center {
+    text-align: center;
+}
 
 .d-flex {
     display: flex;
@@ -111,7 +114,7 @@ code {
     font-size: 18px;
     color: var(--primary-brown-572-f-11, #572F11);
     font-weight: 600;
-    border-bottom: 3px solid #f2f2f2;
+    /* border-bottom: 3px solid #f2f2f2; */
     margin: 0 0 10px 0;
     padding: 10px 0px
 }
