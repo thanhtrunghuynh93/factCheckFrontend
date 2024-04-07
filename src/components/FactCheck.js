@@ -177,7 +177,7 @@ const FactCheck = () => {
             <div className="d-flex align-center">
               <img
                 src={
-                  !summary.support
+                  !summary.result
                     ? "./false_icon.png"
                     : "/true_icon.png"
                 }
@@ -185,10 +185,14 @@ const FactCheck = () => {
                 alt="rating-icon"
               />
               <p className="rating-content">
-                {!summary.support ? "Fake" : "Correct"}
+                {!summary.result ? "Fake" : "Correct"}
               </p>
             </div>
-            <p className="title">{summary.newslead}</p>
+            <div className="title">
+              <b>Score: </b> { summary.score}
+            </div>
+            <p className="title">{summary.explanation}</p>
+            
           </Box>
         )}
         <div className="result mt-1">

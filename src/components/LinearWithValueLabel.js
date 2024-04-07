@@ -20,8 +20,6 @@ const CustomLinearProgress = styled(LinearProgress)(({ theme }) => ({
 	},
 }));
 
-
-
 const LinearProgressWithLabel = (props) => {
 	return (
 		<Box sx={{ display: 'flex', alignItems: 'center' }}>
