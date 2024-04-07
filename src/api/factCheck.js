@@ -50,7 +50,7 @@ export async function summarise({claim, item}) {
         })
         return {
             success: true,
-            data: res.data.data
+            data: JSON.parse(res.data.data)
         }
     } catch (error) {
         return {
