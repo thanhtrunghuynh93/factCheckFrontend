@@ -191,7 +191,9 @@ const FactCheck = () => {
             <div className="title">
               <b>Score: </b> { summary.score}
             </div>
-            <p className="title">{summary.explanation}</p>
+            <div className="title">
+              <b>Explanation: </b> { summary.explanation}
+            </div>
             
           </Box>
         )}
