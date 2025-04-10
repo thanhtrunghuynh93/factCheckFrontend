@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  react-app:
+    build: .
+    ports:
+      - "4060:80"
+    environment:
+      - NODE_ENV=production
+      - REACT_APP_API_URL=https://api.lsirfactcheck.org/
