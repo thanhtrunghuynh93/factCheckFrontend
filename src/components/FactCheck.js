@@ -189,7 +189,7 @@ const FactCheck = () => {
               </p>
             </div>
             <div className="title">
-              <b>Score: </b> { summary.score}
+              <b>Confidence score: </b> { summary.score + " %"}
             </div>
             <div className="title">
               <b>Explanation: </b> { summary.explanation}
